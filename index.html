@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+</head>
+
+<body>
+	<form id="envelopeInfo" onsubmit="drawCanvasRun()">
+		收件人邮编：<input type="text" id="recvPc"> 呼号：<input type="text" id="callsign"><br>
+		收件人地址行1：<input type="text" id="recvAddr1"><br>
+		地址行2：<input type="text" id="recvAddr2"><br>
+		地址行3：<input type="text" id="recvAddr3"><br>
+		收件人：<input type="text" id="recvInfo"><br>
+		<br>
+		寄件人地址行1：<input type="text" id="sendAddr1"><br>
+		地址行2：<input type="text" id="sendAddr2"><br>
+		地址行3：<input type="text" id="sendAddr3"><br>
+		寄件人：<input type="text" id="sendInfo"><br>
+		寄件人邮编：<input type="text" id="sendPc"><br>
+
+		<input type="button" value="生成" onclick="drawCanvasRun(false)">
+		<input type="button" value="下载" onclick="download()">
+		<input type="button" value="一键填写生成" onclick="drawCanvasRun(true)">
+	</form>
+	<canvas id="myCanvas" width="2481" height="3507" style="border:1px solid #d3d3d3;">
+		您的浏览器不支持 HTML5 canvas 标签。</canvas>
+
+	<script>
+		function drawCanvasRun(filldefault)
+		{
+			var recvPc = document.getElementById("recvPc").value;
+			var callsign = document.getElementById("callsign").value;
+			var recvAddr1 = document.getElementById("recvAddr1").value;
+			var recvAddr2 = document.getElementById("recvAddr2").value;
+			var recvAddr3 = document.getElementById("recvAddr3").value;
+			var recvInfo = document.getElementById("recvInfo").value;
+
+			var sendAddr1 = document.getElementById("sendAddr1").value;
+			var sendAddr2 = document.getElementById("sendAddr2").value;
+			var sendAddr3 = document.getElementById("sendAddr3").value;
+			var sendInfo = document.getElementById("sendInfo").value;
+			var sendPc = document.getElementById("sendPc").value;
+
+			if (filldefault)
+			{
+				recvPc = "150001"
+				callsign = "BG2GFP"
+				recvAddr1 = "黑龙江省哈尔滨市南岗区";
+				recvAddr2 = "通达街道汉祥街附95号";
+				recvAddr3 = "汉祥家园4#3-4";
+				recvInfo = "李咕籽（收） 18245969609";
+
+				sendAddr1 = "广东省深圳市龙华区"
+				sendAddr2 = "龙华建设路268号";
+				sendAddr3 = "尚峻花园二期4栋1306";
+				sendInfo = "杨雪枫（寄） 14775033115";
+				sendPc = "518109";
+
+			}
+
+			var recvPcFill = "";
+			for (let index = 0; index < recvPc.length; index++)
+			{
+				recvPcFill += recvPc[index];
+				recvPcFill += "  ";
+			}
+
+			var c = document.getElementById("myCanvas");
+			var ctx = c.getContext("2d");
+			ctx.font = "110px Arial"; // 收件人邮编字体
+			ctx.fillText(recvPcFill, 120, 225); // 邮编
+			ctx.font = "50px Arial"; // 呼号字体
+			ctx.fillText(callsign, 1100, 225); // 呼号
+
+			ctx.font = "75px Arial"; // 地址字体
+			ctx.fillText(recvAddr1, 300, 400); // 地址行1
+			ctx.fillText(recvAddr2, 300, 500); // 地址行2
+			ctx.fillText(recvAddr3, 300, 600); // 地址行3
+			ctx.fillText(recvInfo, 300, 700); // 收件人
+
+			ctx.fillText(sendAddr1, 300, 900); // 寄件人地址1
+			ctx.fillText(sendAddr2, 300, 1000); // 寄件人地址2
+			ctx.fillText(sendAddr3, 300, 1100); // 寄件人地址3
+			ctx.fillText(sendInfo, 300, 1200); // 寄件人
+
+			ctx.font = "50px Arial"; // 寄件人邮编字体
+			ctx.fillText(sendPc, 1800, 1300); // 寄件人邮编
+
+			// return false;
+		}
+
+
+		function drawCanvas()
+		{
+			var c = document.getElementById("myCanvas");
+			var ctx = c.getContext("2d");
+			ctx.font = "100px Arial"; // 收件人邮编字体
+			ctx.fillText("1  5  0  0  0  1", 100, 225);
+			ctx.font = "50px Arial"; // 呼号字体
+			ctx.fillText("BD7PIP", 1100, 225); // 呼号
+
+			ctx.font = "75px Arial"; // 地址字体
+			ctx.fillText("广东省深圳市龙华区", 300, 400); // 地址行1
+			ctx.fillText("龙华建设路268号", 300, 500); // 地址行2
+			ctx.fillText("尚峻花园二期四栋1306", 300, 600); // 地址行3
+			ctx.fillText("杨雪枫（收） 14775033115", 300, 700); // 收件人
+
+			ctx.fillText("广东省深圳市龙华区", 300, 900); // 寄件人地址1
+			ctx.fillText("龙华建设路268号", 300, 1000); // 寄件人地址2
+			ctx.fillText("尚峻花园二期四栋1306", 300, 1100); // 寄件人地址3
+			ctx.fillText("杨雪枫（寄） 14775033115", 300, 1200); // 寄件人
+
+			ctx.font = "50px Arial"; // 寄件人邮编字体
+			ctx.fillText("518109", 1800, 1300); // 寄件人邮编
+		}
+
+		function download()
+		{
+			document.getElementById("myCanvas").toBlob(function (blob)
+			{
+				url = URL.createObjectURL(blob);
+				var link = document.createElement('a');
+				link.textContent = 'download image';
+				link.href = url;
+				var callsign = document.getElementById("callsign").value;
+				if (callsign == "")
+					link.download = document.getElementById("recvInfo").value + ".jpg";
+				else
+					link.download = callsign + ".jpg";
+				link.click()
+				// no longer need to read the blob so it's revoked
+				URL.revokeObjectURL(url);
+			});
+		}
+	</script>
+
+</body>
+
+</html>
